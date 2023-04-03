@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>soundify-resource-service</module>
+        <module>soundify-song-service</module>
     </modules>
 
     <properties>
