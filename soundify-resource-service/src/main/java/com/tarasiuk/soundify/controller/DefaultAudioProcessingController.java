@@ -3,6 +3,7 @@ package com.tarasiuk.soundify.controller;
 import com.tarasiuk.soundify.exception.AudioNotFoundException;
 import com.tarasiuk.soundify.exception.InvalidRequestException;
 import com.tarasiuk.soundify.service.AudioService;
+import controller.AudioProcessingController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,11 +22,12 @@ import static com.tarasiuk.soundify.helper.ControllerHelper.*;
 @RequiredArgsConstructor
 @RequestMapping("/resources")
 @RestController
-public class AudioProcessingController {
+public class DefaultAudioProcessingController implements AudioProcessingController {
 
     private static final String MP3_FORMAT = "audio/mpeg";
     private final AudioService audioService;
 
+    @Override
     @PostMapping
     public ResponseEntity<Map<String, Integer>> uploadAudio(@RequestPart("audio") MultipartFile audio) {
 
@@ -36,6 +38,7 @@ public class AudioProcessingController {
         return new ResponseEntity<>(Map.of("id", audioService.uploadAudio(audio)), HttpStatus.OK);
     }
 
+    @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getAudio(@PathVariable Integer id,
                                            @RequestHeader(value = "Range", required = false) String rangeHeader) {
@@ -53,6 +56,7 @@ public class AudioProcessingController {
         return new ResponseEntity<>(audio.get(), HttpStatus.OK);
     }
 
+    @Override
     @DeleteMapping
     public ResponseEntity<Map<String, int[]>> deleteAudio(@RequestParam("id") String ids) {
         List<Integer> audioIds = validateAndParseIdsRequestParam(ids);

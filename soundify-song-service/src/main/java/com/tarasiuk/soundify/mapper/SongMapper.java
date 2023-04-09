@@ -1,7 +1,7 @@
 package com.tarasiuk.soundify.mapper;
 
-import com.tarasiuk.soundify.data.SongData;
 import com.tarasiuk.soundify.model.Song;
+import data.SongData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

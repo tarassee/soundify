@@ -1,4 +1,4 @@
-package com.tarasiuk.soundify.data;
+package data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;

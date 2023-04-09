@@ -12,6 +12,7 @@
         <module>soundify-resource-service</module>
         <module>soundify-song-service</module>
         <module>soundify-resource-processor</module>
+        <module>soundify-core</module>
     </modules>
 
     <properties>
