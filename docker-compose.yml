@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+
+  #  soundify-resource-processor:
+  #    build: ./soundify-resource-processor
+  #    depends_on:
+  #      - rabbitmq
+  #    networks:
+  #      - soundify-network
+  #
+  #  soundify-song-service:
+  #    build: ./soundify-song-service
+  #    depends_on:
+  #      - mysql
+  #    environment:
+  #      - MYSQL_DATABASE=soundify_song_service
+  #    networks:
+  #      - soundify-network
+  #
+  #  soundify-resource-service:
+  #    build: ./soundify-resource-service
+  #    depends_on:
+  #      - mysql
+  #    environment:
+  #      - MYSQL_DATABASE=soundify_resource
+  #    networks:
+  #      - soundify-network
+
+  mysql:
+    container_name: soundify-mysql
+    image: mysql:8.0.32
+    restart: unless-stopped
+    environment:
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=soundify-resource
+    ports:
+      - "3307:3306"
+    networks:
+      - soundify-network
+
+  rabbitmq:
+    container_name: soundify-rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=nimda
+    networks:
+      - soundify-network
+
+volumes:
+  mysql-data:
+
+networks:
+  soundify-network:
