@@ -1,9 +1,11 @@
 package com.tarasiuk.soundify.service.impl;
 
 import com.tarasiuk.soundify.model.Audio;
+import com.tarasiuk.soundify.producer.ResourceMessageProducer;
 import com.tarasiuk.soundify.repository.AudioRepository;
 import com.tarasiuk.soundify.service.AudioService;
 import com.tarasiuk.soundify.service.S3StorageService;
+import data.ResourceMessageData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,7 @@ public class DefaultAudioService implements AudioService {
 
     private final AudioRepository audioRepository;
     private final S3StorageService s3StorageService;
+    private final ResourceMessageProducer resourceMessageProducer;
 
     @Override
     public Integer uploadAudio(MultipartFile audioFile) {
@@ -25,7 +28,9 @@ public class DefaultAudioService implements AudioService {
                 .format(audioFile.getContentType())
                 .s3Key(audioFileName)
                 .build();
-        return audioRepository.save(internalAudio).getId();
+        Integer id = audioRepository.save(internalAudio).getId();
+        resourceMessageProducer.send(new ResourceMessageData(id));
+        return id;
     }
 
     @Override

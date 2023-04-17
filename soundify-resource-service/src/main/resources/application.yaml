@@ -22,6 +22,11 @@ spring:
       file-size-threshold: 20MB
       max-file-size: 20MB
       max-request-size: 20MB
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: nimda
 cloud:
   aws:
     credentials:
@@ -34,4 +39,8 @@ cloud:
 
 application:
   bucket:
-      name: soundify-audio-bucket
+    name: soundify-audio-bucket
+  rabbitmq:
+    queue: soundify_queue
+    exchange: soundify_exchange
+    routing-key: soundify_routingKey

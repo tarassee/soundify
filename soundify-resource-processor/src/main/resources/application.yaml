@@ -1,6 +1,15 @@
 server:
-  port: 8085
+  port: 8090
 
 spring:
   application:
     name: soundify-resource-processor
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: nimda
+
+application:
+  rabbitmq:
+    queue: soundify_queue
