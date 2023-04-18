@@ -1,6 +1,7 @@
 package com.tarasiuk.soundify.service.impl;
 
 import com.tarasiuk.soundify.client.SongServiceClient;
+import com.tarasiuk.soundify.exception.ClientCallException;
 import com.tarasiuk.soundify.service.SongServiceService;
 import data.SongData;
 import feign.FeignException;
@@ -22,7 +23,7 @@ public class DefaultSongServiceService implements SongServiceService {
         } catch (FeignException e) {
             log.error("Failed to upload song data with resource id {} to song-service. Reason: {}",
                     songData.resourceId(), e.getCause().toString());
-            throw e;
+            throw new ClientCallException(e.getMessage());
         }
     }
 

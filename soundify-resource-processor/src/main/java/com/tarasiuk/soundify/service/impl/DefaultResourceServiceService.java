@@ -1,6 +1,7 @@
 package com.tarasiuk.soundify.service.impl;
 
 import com.tarasiuk.soundify.client.ResourceServiceClient;
+import com.tarasiuk.soundify.exception.ClientCallException;
 import com.tarasiuk.soundify.service.ResourceServiceService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class DefaultResourceServiceService implements ResourceServiceService {
             return resourceServiceClient.getAudio(id);
         } catch (FeignException e) {
             log.error("Failed to get audio with id {} from resource-service. Reason: {}", id, e.getCause().toString());
-            throw e;
+            throw new ClientCallException(e.getMessage());
         }
     }
 
