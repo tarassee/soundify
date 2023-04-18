@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, Integer> {
+
+    boolean existsByResourceId(Integer resourceId);
+
 }

@@ -13,3 +13,7 @@ spring:
 application:
   rabbitmq:
     queue: soundify_queue
+  song-service:
+    url: localhost:8085
+  resource-service:
+    url: localhost:8080

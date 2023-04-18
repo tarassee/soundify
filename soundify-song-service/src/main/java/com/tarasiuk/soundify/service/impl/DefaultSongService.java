@@ -1,5 +1,6 @@
 package com.tarasiuk.soundify.service.impl;
 
+import com.tarasiuk.soundify.exception.InvalidRequestException;
 import com.tarasiuk.soundify.model.Song;
 import com.tarasiuk.soundify.repository.SongRepository;
 import com.tarasiuk.soundify.service.SongService;
@@ -16,6 +17,9 @@ public class DefaultSongService implements SongService {
 
     @Override
     public Integer uploadSong(Song song) {
+        if (songRepository.existsByResourceId(song.getResourceId())) {
+            throw new InvalidRequestException("Song with such a resource id is already present!");
+        }
         return songRepository.save(song).getId();
     }
 
