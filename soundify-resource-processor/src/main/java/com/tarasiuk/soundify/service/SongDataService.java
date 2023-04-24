@@ -1,6 +1,6 @@
 package com.tarasiuk.soundify.service;
 
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 import org.apache.tika.metadata.Metadata;
 
 public interface SongDataService {

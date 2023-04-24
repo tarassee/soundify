@@ -1,6 +1,6 @@
 package com.tarasiuk.soundify.producer;
 
-import data.ResourceMessageData;
+import com.taraiuk.soundify.data.ResourceMessageData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;

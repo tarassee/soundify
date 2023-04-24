@@ -5,7 +5,6 @@ import com.tarasiuk.soundify.exception.InvalidRequestException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -16,6 +15,9 @@ public class ControllerHelper {
     private static final String CSV_IDS_PARAM_REGEXP = "^(?:\\d+,){0," + CSV_IDS_MAX_LENGTH + "}\\d+$";
     private static final String CSV_DELIMITER = ",";
     private static final String RANGE_DELIMITER = "-";
+
+    private ControllerHelper() {
+    }
 
     public static int[] validateAndParseRangeHeader(String rangeHeader) {
         if (Objects.isNull(rangeHeader) || !rangeHeader.matches(RANGE_HEADER_REGEXP)) {
@@ -33,7 +35,7 @@ public class ControllerHelper {
 
         return Arrays.stream(ids.split(CSV_DELIMITER))
                 .map(Integer::valueOf)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static byte[] getByteRange(byte[] bytes, int arg1, int arg2) {

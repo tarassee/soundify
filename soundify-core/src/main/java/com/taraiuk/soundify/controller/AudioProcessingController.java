@@ -1,4 +1,4 @@
-package controller;
+package com.taraiuk.soundify.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

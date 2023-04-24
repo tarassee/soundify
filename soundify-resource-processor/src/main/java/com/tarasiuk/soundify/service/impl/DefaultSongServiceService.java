@@ -3,7 +3,7 @@ package com.tarasiuk.soundify.service.impl;
 import com.tarasiuk.soundify.client.SongServiceClient;
 import com.tarasiuk.soundify.exception.ClientCallException;
 import com.tarasiuk.soundify.service.SongServiceService;
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

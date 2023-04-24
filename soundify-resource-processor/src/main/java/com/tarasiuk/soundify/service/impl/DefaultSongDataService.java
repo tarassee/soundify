@@ -2,7 +2,7 @@ package com.tarasiuk.soundify.service.impl;
 
 import com.tarasiuk.soundify.exception.MetadataException;
 import com.tarasiuk.soundify.service.SongDataService;
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 import org.apache.tika.metadata.Metadata;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class DefaultSongDataService implements SongDataService {
     private static final String ALBUM = "xmpDM:album";
     private static final String DURATION = "xmpDM:duration";
     private static final String RELEASE_DATE = "xmpDM:releaseDate";
-    public static final String DURATION_FORMAT = "%d:%02d";
+    private static final String DURATION_FORMAT = "%d:%02d";
 
     @Override
     public SongData retrieveFrom(Integer id, Metadata metadata) {

@@ -1,6 +1,6 @@
 package com.tarasiuk.soundify.service;
 
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 
 public interface SongServiceService {
 

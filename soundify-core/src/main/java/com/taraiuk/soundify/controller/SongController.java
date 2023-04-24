@@ -1,6 +1,6 @@
-package controller;
+package com.taraiuk.soundify.controller;
 
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -4,7 +4,7 @@ import com.tarasiuk.soundify.processor.SongProcessor;
 import com.tarasiuk.soundify.service.ResourceServiceService;
 import com.tarasiuk.soundify.service.SongDataService;
 import com.tarasiuk.soundify.service.SongServiceService;
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.metadata.Metadata;
 import org.springframework.stereotype.Component;

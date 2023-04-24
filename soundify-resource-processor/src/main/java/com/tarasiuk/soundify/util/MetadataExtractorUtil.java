@@ -1,5 +1,6 @@
 package com.tarasiuk.soundify.util;
 
+import com.tarasiuk.soundify.exception.MetadataException;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.mp3.Mp3Parser;
@@ -26,7 +27,8 @@ public class MetadataExtractorUtil {
         try (InputStream stream = new ByteArrayInputStream(audio)) {
             PARSER.parse(stream, HANDLER, metadata);
         } catch (IOException | SAXException | TikaException e) {
-            LOGGER.error("Failed to extract metadata from audio! Cause: {}", e.getCause().getCause().toString());
+            LOGGER.error("Failed to extract metadata from audio! Cause: {}", e.getCause().toString());
+            throw new MetadataException();
         }
         return metadata;
     }

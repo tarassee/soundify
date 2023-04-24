@@ -3,7 +3,7 @@ package com.tarasiuk.soundify.consumer;
 import com.tarasiuk.soundify.exception.ClientCallException;
 import com.tarasiuk.soundify.exception.MetadataException;
 import com.tarasiuk.soundify.processor.SongProcessor;
-import data.ResourceMessageData;
+import com.taraiuk.soundify.data.ResourceMessageData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

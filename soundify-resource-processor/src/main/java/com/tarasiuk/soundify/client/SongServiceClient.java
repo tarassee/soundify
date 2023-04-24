@@ -1,6 +1,6 @@
 package com.tarasiuk.soundify.client;
 
-import data.SongData;
+import com.taraiuk.soundify.data.SongData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.PostMapping;

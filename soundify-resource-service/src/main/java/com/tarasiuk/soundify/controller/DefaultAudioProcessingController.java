@@ -3,7 +3,7 @@ package com.tarasiuk.soundify.controller;
 import com.tarasiuk.soundify.exception.AudioNotFoundException;
 import com.tarasiuk.soundify.exception.InvalidRequestException;
 import com.tarasiuk.soundify.service.AudioService;
-import controller.AudioProcessingController;
+import com.taraiuk.soundify.controller.AudioProcessingController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

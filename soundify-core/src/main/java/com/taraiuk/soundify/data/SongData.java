@@ -1,4 +1,4 @@
-package data;
+package com.taraiuk.soundify.data;
 
 import org.springframework.lang.Nullable;
 
