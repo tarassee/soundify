@@ -1,15 +1,14 @@
 package com.tarasiuk.soundify.processor.impl;
 
+import com.taraiuk.soundify.data.SongData;
 import com.tarasiuk.soundify.processor.SongProcessor;
 import com.tarasiuk.soundify.service.ResourceServiceService;
 import com.tarasiuk.soundify.service.SongDataService;
 import com.tarasiuk.soundify.service.SongServiceService;
-import com.taraiuk.soundify.data.SongData;
+import com.tarasiuk.soundify.util.MetadataExtractorUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.metadata.Metadata;
 import org.springframework.stereotype.Component;
-
-import static com.tarasiuk.soundify.util.MetadataExtractorUtil.extractMetadata;
 
 @RequiredArgsConstructor
 @Component
@@ -28,6 +27,10 @@ public class DefaultSongProcessor implements SongProcessor {
         SongData songData = songDataService.retrieveFrom(id, metadata);
 
         songServiceService.uploadSong(songData);
+    }
+
+    protected Metadata extractMetadata(byte[] audio) {
+        return MetadataExtractorUtil.extractMetadata(audio);
     }
 
 }

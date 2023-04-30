@@ -28,14 +28,14 @@ public class DefaultS3StorageService implements S3StorageService {
 
     @Override
     public String uploadFile(MultipartFile file) {
-        File convertedFile = FilesUtil.convertMultiPartFileToFile(file);
+        File convertedFile = convertMultiPartFileToFile(file);
         String fileName = getUniqueFileName(file);
 
         try {
             s3Client.putObject(new PutObjectRequest(bucketName, fileName, convertedFile));
             return fileName;
         } finally {
-            FilesUtil.deleteFile(convertedFile);
+            deleteConvertedFile(convertedFile);
         }
     }
 
@@ -48,7 +48,7 @@ public class DefaultS3StorageService implements S3StorageService {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
 
         try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
-            return IOUtils.toByteArray(inputStream);
+            return toByteArray(inputStream);
         } catch (IOException e) {
             log.error("Error while retrieving S3 file '{}' from bucket '{}': {}", fileName, bucketName, e.getMessage());
             return new byte[0];
@@ -59,6 +59,18 @@ public class DefaultS3StorageService implements S3StorageService {
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
         return fileName;
+    }
+
+    protected File convertMultiPartFileToFile(MultipartFile file) {
+        return FilesUtil.convertMultiPartFileToFile(file);
+    }
+
+    protected void deleteConvertedFile(File file) {
+        FilesUtil.deleteFile(file);
+    }
+
+    protected byte[] toByteArray(S3ObjectInputStream inputStream) throws IOException {
+        return IOUtils.toByteArray(inputStream);
     }
 
 }

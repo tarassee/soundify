@@ -1,13 +1,13 @@
 package com.tarasiuk.soundify.service.impl;
 
+import com.taraiuk.soundify.data.SongData;
 import com.tarasiuk.soundify.exception.MetadataException;
 import com.tarasiuk.soundify.service.SongDataService;
-import com.taraiuk.soundify.data.SongData;
 import org.apache.tika.metadata.Metadata;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
 
 @Service
 public class DefaultSongDataService implements SongDataService {
@@ -39,7 +39,9 @@ public class DefaultSongDataService implements SongDataService {
     }
 
     private String format(String duration) {
-        requireNonNull(duration);
+        if (isNull(duration)) {
+            return null;
+        }
         double seconds = Double.parseDouble(duration);
         long minutes = (long) seconds / 60;
         long remainingSeconds = (long) seconds % 60;

@@ -20,7 +20,7 @@ public class DefaultResourceServiceService implements ResourceServiceService {
         try {
             return resourceServiceClient.getAudio(id);
         } catch (FeignException e) {
-            log.error("Failed to get audio with id {} from resource-service. Reason: {}", id, e.getCause().toString());
+            log.error("Failed to get audio with id {} from resource-service. Reason: {}", id, e.getCause());
             throw new ClientCallException(e.getMessage());
         }
     }

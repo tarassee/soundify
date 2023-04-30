@@ -22,7 +22,7 @@ public class DefaultSongServiceService implements SongServiceService {
             songServiceClient.uploadSong(songData);
         } catch (FeignException e) {
             log.error("Failed to upload song data with resource id {} to song-service. Reason: {}",
-                    songData.resourceId(), e.getCause().toString());
+                    songData.resourceId(), e.getCause());
             throw new ClientCallException(e.getMessage());
         }
     }
