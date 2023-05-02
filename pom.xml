@@ -13,6 +13,7 @@
         <module>soundify-song-service</module>
         <module>soundify-resource-processor</module>
         <module>soundify-core</module>
+        <module>soundify-api-test</module>
     </modules>
 
     <properties>
