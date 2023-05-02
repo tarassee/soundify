@@ -81,6 +81,31 @@ class DefaultSongControllerTest {
     }
 
     @Test
+    void shouldReturnSongDataIfSongWasFoundByResourceId() {
+        when(songService.findSongByResourceId(anyInt())).thenReturn(Optional.of(song));
+        when(songMapper.toSongData(any(Song.class))).thenReturn(songData);
+
+        ResponseEntity<SongData> responseEntity =
+                testInstance.getSongByResourceId(song.getId());
+
+        verify(songService).findSongByResourceId(song.getId());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        assertEquals(songData, responseEntity.getBody());
+    }
+
+    @Test
+    void shouldThrowExceptionIfSongWasNotFoundByResourceId() {
+        when(songService.findSongByResourceId(anyInt())).thenReturn(Optional.empty());
+        Integer id = song.getId();
+
+        assertThrows(SongNotFoundException.class, () ->
+                testInstance.getSongByResourceId(id));
+
+        verify(songService).findSongByResourceId(song.getId());
+    }
+
+    @Test
     void shouldReturnDeletedSongIds() {
         when(songService.existsById(anyInt())).thenReturn(true);
         when(songService.deleteSong(anyInt())).thenReturn(song.getId());

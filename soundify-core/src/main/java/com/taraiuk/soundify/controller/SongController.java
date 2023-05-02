@@ -15,6 +15,8 @@ public interface SongController {
 
     ResponseEntity<SongData> getSong(@PathVariable Integer id);
 
+    ResponseEntity<SongData> getSongByResourceId(@PathVariable Integer resourceId);
+
     ResponseEntity<Map<String, int[]>> deleteSong(@RequestParam("id") String ids);
 
 }

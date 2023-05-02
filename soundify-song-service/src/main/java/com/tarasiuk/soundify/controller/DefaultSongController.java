@@ -47,6 +47,18 @@ public class DefaultSongController implements SongController {
     }
 
     @Override
+    @GetMapping("resource/{resourceId}")
+    public ResponseEntity<SongData> getSongByResourceId(@PathVariable Integer resourceId) {
+        Optional<Song> song = songService.findSongByResourceId(resourceId);
+
+        if (song.isEmpty()) {
+            throw new SongNotFoundException("Song is not found by given resource ID: " + resourceId);
+        }
+
+        return new ResponseEntity<>(songMapper.toSongData(song.get()), HttpStatus.OK);
+    }
+
+    @Override
     @DeleteMapping
     public ResponseEntity<Map<String, int[]>> deleteSong(@RequestParam("id") String ids) {
         List<Integer> songIds = validateAndParseIdsRequestParam(ids);

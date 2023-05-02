@@ -29,6 +29,11 @@ public class DefaultSongService implements SongService {
     }
 
     @Override
+    public Optional<Song> findSongByResourceId(Integer resourceId) {
+        return songRepository.findByResourceId(resourceId);
+    }
+
+    @Override
     public Integer deleteSong(Integer id) {
         songRepository.deleteById(id);
         return id;

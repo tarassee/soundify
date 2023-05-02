@@ -10,6 +10,8 @@ public interface SongService {
 
     Optional<Song> findSong(Integer id);
 
+    Optional<Song> findSongByResourceId(Integer resourceId);
+
     Integer deleteSong(Integer id);
 
     boolean existsById(Integer id);
