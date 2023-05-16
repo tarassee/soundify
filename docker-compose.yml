@@ -2,39 +2,53 @@ version: '3.9'
 
 services:
 
-  #  soundify-resource-processor:
-  #    build: ./soundify-resource-processor
-  #    depends_on:
-  #      - rabbitmq
-  #    networks:
-  #      - soundify-network
-  #
-  #  soundify-song-service:
-  #    build: ./soundify-song-service
-  #    depends_on:
-  #      - mysql
-  #    environment:
-  #      - MYSQL_DATABASE=soundify_song_service
-  #    networks:
-  #      - soundify-network
-  #
-  #  soundify-resource-service:
-  #    build: ./soundify-resource-service
-  #    depends_on:
-  #      - mysql
-  #    environment:
-  #      - MYSQL_DATABASE=soundify_resource
-  #    networks:
-  #      - soundify-network
+  soundify-resource-service:
+    container_name: soundify-resource-service
+    build: ./soundify-resource-service
+    depends_on:
+      - mysql
+      - rabbitmq
+    environment:
+      - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_RESOURCE_SERVICE
+    ports:
+      - "8080:8080"
+    networks:
+      - soundify-network
+
+  soundify-resource-processor:
+    container_name: soundify-resource-processor
+    build: ./soundify-resource-processor
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_RESOURCE_PROCESSOR
+    ports:
+      - "8090:8090"
+    networks:
+      - soundify-network
+
+  soundify-song-service:
+    container_name: soundify-song-service
+    build: ./soundify-song-service
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_SONG_SERVICE
+    ports:
+      - "8085:8085"
+    networks:
+      - soundify-network
 
   mysql:
     container_name: soundify-mysql
     image: mysql:8.0.32
     restart: unless-stopped
     environment:
-      - MYSQL_PASSWORD=root
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=soundify-resource
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+    volumes:
+      - ./data/soundify-init.sql:/docker-entrypoint-initdb.d/soundify-init.sql
     ports:
       - "3307:3306"
     networks:
@@ -47,13 +61,10 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=nimda
+      - RABBITMQ_DEFAULT_USER=$RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS=$RABBITMQ_DEFAULT_PASS
     networks:
       - soundify-network
-
-volumes:
-  mysql-data:
 
 networks:
   soundify-network:
