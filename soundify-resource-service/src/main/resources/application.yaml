@@ -6,7 +6,7 @@ spring:
     name: soundify-resource-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/soundify-resource
+    url: jdbc:mysql://localhost:3307/soundify_resource
     username: root
     password: root
   jpa:
@@ -39,7 +39,7 @@ cloud:
 
 application:
   bucket:
-    name: soundify-audio-bucket
+    name: soundify-audio-bucket-upd
   rabbitmq:
     queue: soundify_queue
     exchange: soundify_exchange
