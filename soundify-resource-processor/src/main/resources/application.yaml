@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 0
 
 spring:
   application:
@@ -14,6 +14,16 @@ application:
   rabbitmq:
     queue: soundify_queue
   song-service:
-    url: localhost:8085
+    name: SOUNDIFY-SONG-SERVICE
   resource-service:
-    url: localhost:8080
+    name: SOUNDIFY-RESOURCE-SERVICE
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${random.value}

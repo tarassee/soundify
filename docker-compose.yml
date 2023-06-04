@@ -2,6 +2,18 @@ version: '3.9'
 
 services:
 
+  soundify-eureka-server:
+    container_name: soundify-eureka-server
+    build: ./soundify-eureka-server
+    environment:
+      - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_EUREKA_SERVER
+    ports:
+      - "8761:8761"
+    volumes:
+      - "maven_repo:/root/.m2"
+    networks:
+      - soundify-network
+
   soundify-resource-service:
     container_name: soundify-resource-service
     build: ./soundify-resource-service
@@ -12,6 +24,8 @@ services:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_RESOURCE_SERVICE
     ports:
       - "8080:8080"
+    volumes:
+      - "maven_repo:/root/.m2"
     networks:
       - soundify-network
 
@@ -24,6 +38,8 @@ services:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_RESOURCE_PROCESSOR
     ports:
       - "8090:8090"
+    volumes:
+      - "maven_repo:/root/.m2"
     networks:
       - soundify-network
 
@@ -36,6 +52,8 @@ services:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_SONG_SERVICE
     ports:
       - "8085:8085"
+    volumes:
+      - "maven_repo:/root/.m2"
     networks:
       - soundify-network
 
@@ -68,3 +86,6 @@ services:
 
 networks:
   soundify-network:
+
+volumes:
+  maven_repo:

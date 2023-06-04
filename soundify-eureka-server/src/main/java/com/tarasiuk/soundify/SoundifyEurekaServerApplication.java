@@ -2,12 +2,14 @@ package com.tarasiuk.soundify;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
-@EnableEurekaClient
+@EnableEurekaServer
 @SpringBootApplication
-public class SoundifySongServiceApplication {
+public class SoundifyEurekaServerApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(SoundifySongServiceApplication.class, args);
+        SpringApplication.run(SoundifyEurekaServerApplication.class, args);
     }
+
 }

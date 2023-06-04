@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 0
 
 spring:
   application:
@@ -11,7 +11,7 @@ spring:
     password: root
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
@@ -22,3 +22,13 @@ spring:
       file-size-threshold: 20MB
       max-file-size: 20MB
       max-request-size: 20MB
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${random.value}

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Map;
 
-@FeignClient(name = "song-service", url = "${application.song-service.url}")
+@FeignClient(name = "${application.song-service.name}")
 public interface SongServiceClient {
 
     @Retryable(exceptionExpression = "message.contains('timeout')", maxAttempts = 4)
