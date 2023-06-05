@@ -15,6 +15,7 @@
         <module>soundify-core</module>
         <module>soundify-api-test</module>
         <module>soundify-eureka-server</module>
+        <module>soundify-api-gateway</module>
     </modules>
 
     <properties>

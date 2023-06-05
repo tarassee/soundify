@@ -1,0 +1,41 @@
+server:
+  port: 8765
+
+spring:
+  application:
+    name: soundify-api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: soundify-resource-service-id
+          uri: lb://soundify-resource-service
+          predicates:
+            - Path=/resources/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: soundify-resource-service
+                fallbackUri: forward:/fallback/resource
+                numberOfAttempts: 0
+        - id: soundify-song-service-id
+          uri: lb://soundify-song-service
+          predicates:
+            - Path=/songs/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: soundify-song-service
+                fallbackUri: forward:/fallback/song
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 2 # for dev purpose
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
