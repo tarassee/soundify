@@ -77,6 +77,22 @@ services:
     networks:
       - soundify-network
 
+  # NOTE: In localstack community version s3 buckets are deleted after container is stopped/restarted
+  localstack:
+    container_name: soundify-localstack
+    image: localstack/localstack:2.1.0
+    environment:
+      - SERVICES=s3
+      - PERSISTENCE=1
+      - EAGER_SERVICE_LOADING=1
+    ports:
+      - "127.0.0.1:4566:4566"
+    volumes:
+      - localstack-data:/tmp/localstack/data
+      - ./data/localstack-init.sh:/etc/localstack/init/ready.d/init-aws.sh
+    networks:
+      - soundify-network
+
   mysql:
     container_name: soundify-mysql
     image: mysql:8.0.32
@@ -86,7 +102,7 @@ services:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQL_DATABASE
     volumes:
-      - ./data/soundify-init.sql:/docker-entrypoint-initdb.d/soundify-init.sql
+      - ./data/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql
     ports:
       - "3307:3306"
     networks:
@@ -109,3 +125,4 @@ networks:
 
 volumes:
   maven_repo:
+  localstack-data:

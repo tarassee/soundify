@@ -22,7 +22,7 @@ import java.util.UUID;
 @Service
 public class DefaultS3StorageService implements S3StorageService {
 
-    @Value("${application.bucket.name}")
+    @Value("${application.storage.bucket}")
     private String bucketName;
     private final AmazonS3 s3Client;
 

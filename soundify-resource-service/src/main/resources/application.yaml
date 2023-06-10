@@ -27,19 +27,20 @@ spring:
     port: 5672
     username: admin
     password: nimda
-cloud:
+storage:
   aws:
     credentials:
       access-key:
       secret-key:
     region:
       static: eu-north-1
-    stack:
-      audio: true
+  localstack:
+    endpoint: http://localhost:4566
 
 application:
-  bucket:
-    name: soundify-audio-bucket-upd
+  storage:
+    type: LOCALSTACK
+    bucket: soundify-audio-bucket-upd
   rabbitmq:
     queue: soundify_queue
     exchange: soundify_exchange

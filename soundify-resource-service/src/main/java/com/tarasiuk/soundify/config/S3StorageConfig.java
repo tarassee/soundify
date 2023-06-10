@@ -1,30 +1,41 @@
 package com.tarasiuk.soundify.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.tarasiuk.soundify.config.provider.S3ClientProvider;
+import com.tarasiuk.soundify.config.provider.impl.AwsS3ClientProvider;
+import com.tarasiuk.soundify.config.provider.impl.LocalstackS3ClientProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3StorageConfig {
 
-    @Value("${cloud.aws.credentials.access-key}")
+    @Value("${storage.aws.credentials.access-key}")
     private String accessKey;
-    @Value("${cloud.aws.credentials.secret-key}")
+    @Value("${storage.aws.credentials.secret-key}")
     private String accessSecret;
-    @Value("${cloud.aws.region.static}")
+    @Value("${storage.aws.region.static}")
     private String region;
+    @Value("${storage.localstack.endpoint}")
+    private String localstackEndpoint;
 
     @Bean
-    public AmazonS3 s3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, accessSecret);
-        return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(region)
-                .build();
+    @ConditionalOnProperty(name = "application.storage.type", havingValue = "AWS", matchIfMissing = true)
+    public S3ClientProvider awsS3ClientStrategy() {
+        return new AwsS3ClientProvider(accessKey, accessSecret, region);
     }
+
+    @Bean
+    @ConditionalOnProperty(name = "application.storage.type", havingValue = "LOCALSTACK")
+    public S3ClientProvider localstackS3ClientStrategy() {
+        return new LocalstackS3ClientProvider(localstackEndpoint, region);
+    }
+
+    @Bean
+    public AmazonS3 s3Client(S3ClientProvider s3ClientProvider) {
+        return s3ClientProvider.createS3Client();
+    }
+
 }
