@@ -1,5 +1,7 @@
 package com.tarasiuk.soundify.config.provider.impl;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -23,7 +25,17 @@ public class LocalstackS3ClientProvider implements S3ClientProvider {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withPathStyleAccessEnabled(true)
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(localstackEndpoint, region))
+                .withClientConfiguration(getClientConfiguration())
                 .build();
+    }
+
+    private static ClientConfiguration getClientConfiguration() {
+        ClientConfiguration configuration = new ClientConfiguration();
+        configuration.setMaxErrorRetry(3);
+        configuration.setConnectionTimeout(50 * 1000);
+        configuration.setSocketTimeout(50 * 1000);
+        configuration.setProtocol(Protocol.HTTP);
+        return configuration;
     }
 
 }

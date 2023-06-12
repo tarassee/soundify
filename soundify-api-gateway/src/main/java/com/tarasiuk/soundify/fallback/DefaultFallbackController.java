@@ -22,6 +22,12 @@ public class DefaultFallbackController {
                 "Song Service is currently unavailable. Please try again later.");
     }
 
+    @RequestMapping("/fallback/storages")
+    public ResponseEntity<ErrorResponse> storagesFallback() {
+        return createResponse(HttpStatus.SERVICE_UNAVAILABLE,
+                "Storages Info Service is currently unavailable. Please try again later.");
+    }
+
     private ResponseEntity<ErrorResponse> createResponse(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new ErrorResponse(httpStatus.value(), message, Instant.now().toString()), httpStatus);
     }

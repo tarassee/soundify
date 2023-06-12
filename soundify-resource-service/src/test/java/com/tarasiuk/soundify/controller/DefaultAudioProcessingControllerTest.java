@@ -1,8 +1,7 @@
 package com.tarasiuk.soundify.controller;
 
-import com.tarasiuk.soundify.exception.AudioNotFoundException;
 import com.tarasiuk.soundify.exception.InvalidRequestException;
-import com.tarasiuk.soundify.service.AudioService;
+import com.tarasiuk.soundify.facade.AudioFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,11 +24,13 @@ class DefaultAudioProcessingControllerTest {
 
     private static final String MP3_FORMAT = "audio/mpeg";
     private static final int AUDIO_ID = 1;
-    private static final byte[] AUDIO_CONTENT = new byte[] {1, 2, 3};
-    @Mock
-    private AudioService audioService;
+    private static final byte[] AUDIO_CONTENT = new byte[]{1, 2, 3};
+
     @InjectMocks
     private DefaultAudioProcessingController testInstance;
+
+    @Mock
+    private AudioFacade audioFacade;
     private MultipartFile audio;
 
     @BeforeEach
@@ -40,12 +40,12 @@ class DefaultAudioProcessingControllerTest {
 
     @Test
     void shouldReturnAudioIdAfterUploadAudioExecution() {
-        when(audioService.uploadAudio(audio)).thenReturn(AUDIO_ID);
+        when(audioFacade.saveToStaging(audio)).thenReturn(AUDIO_ID);
 
         ResponseEntity<Map<String, Integer>> responseEntity =
                 testInstance.uploadAudio(audio);
 
-        verify(audioService).uploadAudio(audio);
+        verify(audioFacade).saveToStaging(audio);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         assertEquals(Map.of("id", AUDIO_ID), responseEntity.getBody());
@@ -58,17 +58,26 @@ class DefaultAudioProcessingControllerTest {
         assertThrows(InvalidRequestException.class, () ->
                 testInstance.uploadAudio(unsupportedAudio));
 
-        verify(audioService, never()).uploadAudio(any());
+        verify(audioFacade, never()).saveToStaging(any());
+    }
+
+    @Test
+    void shouldReturnHttpStatusOkIfUpdateAudioStorageExecutionSucceeds() {
+        ResponseEntity<Void> responseEntity =
+                testInstance.updateAudioStorage(AUDIO_ID);
+
+        verify(audioFacade).moveToPermanent(AUDIO_ID);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
     void shouldReturnAudioContentIfAudioWasFound() {
-        when(audioService.getAudioContentById(AUDIO_ID)).thenReturn(Optional.of(AUDIO_CONTENT));
+        when(audioFacade.getAudioContentById(AUDIO_ID)).thenReturn(AUDIO_CONTENT);
 
         ResponseEntity<byte[]> responseEntity =
                 testInstance.getAudio(AUDIO_ID, null);
 
-        verify(audioService).getAudioContentById(AUDIO_ID);
+        verify(audioFacade).getAudioContentById(AUDIO_ID);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         assertArrayEquals(AUDIO_CONTENT, responseEntity.getBody());
@@ -77,24 +86,33 @@ class DefaultAudioProcessingControllerTest {
     @Test
     void shouldReturnPartialContentIfRangeHeaderIsPresent() {
         String rangeHeader = "0-1";
-        when(audioService.getAudioContentById(AUDIO_ID)).thenReturn(Optional.of(AUDIO_CONTENT));
+        when(audioFacade.getAudioContentById(AUDIO_ID)).thenReturn(AUDIO_CONTENT);
 
         ResponseEntity<byte[]> responseEntity =
                 testInstance.getAudio(AUDIO_ID, rangeHeader);
 
-        verify(audioService).getAudioContentById(AUDIO_ID);
+        verify(audioFacade).getAudioContentById(AUDIO_ID);
         assertEquals(HttpStatus.PARTIAL_CONTENT, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         assertArrayEquals(Arrays.copyOfRange(AUDIO_CONTENT, 0, 1), responseEntity.getBody());
     }
 
     @Test
-    void shouldThrowExceptionIfAudioWasNotFound() {
-        when(audioService.getAudioContentById(AUDIO_ID)).thenReturn(Optional.empty());
+    void shouldReturnDeletedAudioIdsAfterDeleteAudioExecution() {
+        String ids = "1,2,3";
+        Integer[] deletedAudioIds = {1, 3};
+        when(audioFacade.deleteAudio(anyInt()))
+                .thenReturn(1)
+                .thenReturn(null)
+                .thenReturn(3);
 
-        assertThrows(AudioNotFoundException.class, () ->
-                testInstance.getAudio(AUDIO_ID, null));
+        ResponseEntity<Map<String, Integer[]>> responseEntity =
+                testInstance.deleteAudio(ids);
 
-        verify(audioService).getAudioContentById(AUDIO_ID);
+        verify(audioFacade, times(3)).deleteAudio(anyInt());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        assertArrayEquals(deletedAudioIds, responseEntity.getBody().get("ids"));
     }
+
 }

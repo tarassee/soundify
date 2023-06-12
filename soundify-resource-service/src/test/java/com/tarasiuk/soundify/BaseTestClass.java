@@ -1,6 +1,7 @@
 package com.tarasiuk.soundify;
 
 import com.tarasiuk.soundify.controller.DefaultAudioProcessingController;
+import com.tarasiuk.soundify.facade.AudioFacade;
 import com.tarasiuk.soundify.service.AudioService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -27,11 +26,13 @@ public class BaseTestClass {
     @Autowired
     private DefaultAudioProcessingController defaultAudioProcessingController;
     @MockBean
+    private AudioFacade audioFacade;
+    @MockBean
     private AudioService audioService;
 
     @BeforeEach
     void setUp() {
-        when(audioService.getAudioContentById(anyInt())).thenReturn(Optional.of(new byte[]{101, 21, 32, 65}));
+        when(audioFacade.getAudioContentById(anyInt())).thenReturn(new byte[]{101, 21, 32, 65});
         RestAssuredMockMvc.standaloneSetup(defaultAudioProcessingController);
     }
 

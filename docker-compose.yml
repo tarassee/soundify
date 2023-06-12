@@ -47,6 +47,21 @@ services:
     networks:
       - soundify-network
 
+  soundify-storage-info-service:
+    container_name: soundify-storage-info-service
+    build: ./soundify-storage-info-service
+    depends_on:
+      - mysql
+      - soundify-eureka-server
+    environment:
+      - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_STORAGE_INFO_SERVICE
+    ports:
+      - "8095:8095"
+    volumes:
+      - "maven_repo:/root/.m2"
+    networks:
+      - soundify-network
+
   soundify-resource-processor:
     container_name: soundify-resource-processor
     build: ./soundify-resource-processor
@@ -89,7 +104,7 @@ services:
       - "127.0.0.1:4566:4566"
     volumes:
       - localstack-data:/tmp/localstack/data
-      - ./data/localstack-init.sh:/etc/localstack/init/ready.d/init-aws.sh
+      - ./data/localstack/localstack-init.sh:/etc/localstack/init/ready.d/init-aws.sh
     networks:
       - soundify-network
 
@@ -102,7 +117,9 @@ services:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQL_DATABASE
     volumes:
-      - ./data/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql
+      - ./data/mysql/resource-service-init.sql:/docker-entrypoint-initdb.d/resource-service-init.sql
+      - ./data/mysql/song-service-init.sql:/docker-entrypoint-initdb.d/song-service-init.sql
+      - ./data/mysql/storage-info-service-init.sql:/docker-entrypoint-initdb.d/storage-info-service-init.sql
     ports:
       - "3307:3306"
     networks:

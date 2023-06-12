@@ -26,4 +26,9 @@ public class Audio {
 
     @Column
     private String format;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private StorageType storageType;
+
 }

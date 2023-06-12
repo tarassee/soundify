@@ -67,22 +67,4 @@ class AudioRepositoryIntegrationTest {
         assertNull(testEntityManager.find(Audio.class, audioId));
     }
 
-    @Test
-    void shouldReturnTrueWhenAudioExistsInDatabase() {
-        Integer audioId = (Integer) testEntityManager.persistAndGetId(audio);
-
-        boolean audioExistsResult = audioRepository.existsById(audioId);
-
-        assertTrue(audioExistsResult);
-    }
-
-    @Test
-    void shouldReturnFalseWhenAudioDoesNotExistInDatabase() {
-        int nonexistentAudioId = 100;
-
-        boolean audioExistsResult = audioRepository.existsById(nonexistentAudioId);
-
-        assertFalse(audioExistsResult);
-    }
-
 }

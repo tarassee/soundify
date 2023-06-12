@@ -11,7 +11,7 @@ spring:
     password: root
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
@@ -40,11 +40,12 @@ storage:
 application:
   storage:
     type: LOCALSTACK
-    bucket: soundify-audio-bucket-upd
   rabbitmq:
     queue: soundify_queue
     exchange: soundify_exchange
     routing-key: soundify_routingKey
+  storage-info-service:
+    name: SOUNDIFY-STORAGE-INFO-SERVICE
 
 eureka:
   client:

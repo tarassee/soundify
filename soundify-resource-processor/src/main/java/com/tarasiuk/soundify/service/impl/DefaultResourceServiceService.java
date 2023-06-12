@@ -25,4 +25,14 @@ public class DefaultResourceServiceService implements ResourceServiceService {
         }
     }
 
+    @Override
+    public void updateAudioStorage(Integer id) {
+        try {
+            resourceServiceClient.updateAudioStorage(id);
+        } catch (FeignException e) {
+            log.error("Failed to get audio with id {} from resource-service. Reason: {}", id, e.getCause());
+            throw new ClientCallException(e.getMessage());
+        }
+    }
+
 }

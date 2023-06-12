@@ -20,7 +20,6 @@ spring:
               args:
                 name: soundify-resource-service
                 fallbackUri: forward:/fallback/resource
-                numberOfAttempts: 0
         - id: soundify-song-service-id
           uri: lb://soundify-song-service
           predicates:
@@ -30,6 +29,15 @@ spring:
               args:
                 name: soundify-song-service
                 fallbackUri: forward:/fallback/song
+        - id: soundify-storage-info-service-id
+          uri: lb://soundify-storage-info-service
+          predicates:
+            - Path=/storages/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: soundify-storage-info-service
+                fallbackUri: forward:/fallback/storages
 
 eureka:
   client:

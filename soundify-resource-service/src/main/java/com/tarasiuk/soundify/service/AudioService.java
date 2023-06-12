@@ -1,17 +1,15 @@
 package com.tarasiuk.soundify.service;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.tarasiuk.soundify.model.Audio;
 
 import java.util.Optional;
 
 public interface AudioService {
 
-    Integer uploadAudio(MultipartFile audioFile);
+    Audio saveAudio(Audio audio);
 
-    Optional<byte[]> getAudioContentById(Integer id);
+    Optional<Audio> findAudioById(Integer id);
 
-    Integer deleteAudio(Integer id);
-
-    boolean existsById(Integer id);
+    void deleteAudio(Audio audio);
 
 }
