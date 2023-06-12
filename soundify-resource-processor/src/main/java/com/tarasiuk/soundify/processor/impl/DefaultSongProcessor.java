@@ -27,6 +27,8 @@ public class DefaultSongProcessor implements SongProcessor {
         SongData songData = songDataService.retrieveFrom(id, metadata);
 
         songServiceService.uploadSong(songData);
+
+        resourceServiceService.updateAudioStorage(id);
     }
 
     protected Metadata extractMetadata(byte[] audio) {

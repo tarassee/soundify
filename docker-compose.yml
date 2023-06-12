@@ -47,6 +47,21 @@ services:
     networks:
       - soundify-network
 
+  soundify-storage-info-service:
+    container_name: soundify-storage-info-service
+    build: ./soundify-storage-info-service
+    depends_on:
+      - rabbitmq
+      - soundify-eureka-server
+    environment:
+      - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_STORAGE_INFO_SERVICE
+    ports:
+      - "8095:8095"
+    volumes:
+      - "maven_repo:/root/.m2"
+    networks:
+      - soundify-network
+
   soundify-resource-processor:
     container_name: soundify-resource-processor
     build: ./soundify-resource-processor

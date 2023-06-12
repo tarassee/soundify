@@ -2,6 +2,7 @@ package com.tarasiuk.soundify.service.impl;
 
 import com.taraiuk.soundify.data.ResourceMessageData;
 import com.tarasiuk.soundify.model.Audio;
+import com.tarasiuk.soundify.model.StorageType;
 import com.tarasiuk.soundify.producer.ResourceMessageProducer;
 import com.tarasiuk.soundify.repository.AudioRepository;
 import com.tarasiuk.soundify.service.AudioService;
@@ -21,10 +22,10 @@ public class DefaultAudioService implements AudioService {
     private final ResourceMessageProducer resourceMessageProducer;
 
     @Override
-    public Integer uploadAudio(MultipartFile audioFile) {
-        String audioFileName = s3StorageService.uploadFile(audioFile);
+    public Integer createAudio(MultipartFile audioFile, StorageType storageType) {
+        String audioFileName = s3StorageService.uploadFile(audioFile, storageType);
 
-        Audio internalAudio = createAudio(audioFile, audioFileName);
+        Audio internalAudio = buildAudio(audioFile, audioFileName, storageType);
 
         Integer id = audioRepository.save(internalAudio).getId();
 
@@ -32,30 +33,42 @@ public class DefaultAudioService implements AudioService {
         return id;
     }
 
-    private static Audio createAudio(MultipartFile audioFile, String audioFileName) {
+    @Override
+    public Audio moveAudio(Audio audio, StorageType destinationStorageType) {
+        s3StorageService.moveFile(audio.getS3Key(), audio.getStorageType(), destinationStorageType);
+        audio.setStorageType(destinationStorageType);
+        return audioRepository.save(audio);
+    }
+
+    private static Audio buildAudio(MultipartFile audioFile, String audioFileName, StorageType storageType) {
         return Audio.builder()
                 .name(audioFile.getOriginalFilename())
                 .format(audioFile.getContentType())
                 .s3Key(audioFileName)
+                .storageType(storageType)
                 .build();
+    }
+
+    @Override
+    public Optional<Audio> findAudioById(Integer id) {
+        return audioRepository.findById(id);
     }
 
     @Override
     public Optional<byte[]> getAudioContentById(Integer id) {
         Optional<Audio> audio = audioRepository.findById(id);
 
-        return audio.map(value -> s3StorageService.downloadFile(value.getS3Key()));
+        return audio.map(value -> s3StorageService.downloadFile(value.getS3Key(), value.getStorageType()));
     }
 
     @Override
     public Integer deleteAudio(Integer id) {
         Optional<Audio> audio = audioRepository.findById(id);
-        if (audio.isPresent()) {
-            s3StorageService.deleteFile(audio.get().getS3Key());
+        return audio.map(audioValue -> {
+            s3StorageService.deleteFile(audioValue.getS3Key(), audioValue.getStorageType());
             audioRepository.deleteById(id);
             return id;
-        }
-        return null;
+        }).orElse(null);
     }
 
     @Override

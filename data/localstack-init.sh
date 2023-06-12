@@ -2,7 +2,7 @@
 
 echo "INFO: Creating S3 buckets if they do not exist..."
 
-buckets=("soundify-audio-bucket-upd")
+buckets=("soundify-staged-storage-bucket" "soundify-permanent-storage-bucket")
 region="eu-north-1"
 
 existing_buckets=$(awslocal s3api list-buckets --query 'Buckets[].Name' --output text)

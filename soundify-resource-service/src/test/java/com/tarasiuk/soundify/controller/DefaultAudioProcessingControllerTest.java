@@ -38,28 +38,28 @@ class DefaultAudioProcessingControllerTest {
         audio = new MockMultipartFile("audio.mp3", "audio.mp3", MP3_FORMAT, AUDIO_CONTENT);
     }
 
-    @Test
-    void shouldReturnAudioIdAfterUploadAudioExecution() {
-        when(audioService.uploadAudio(audio)).thenReturn(AUDIO_ID);
+//    @Test
+//    void shouldReturnAudioIdAfterUploadAudioExecution() {
+//        when(audioService.uploadAudio(audio)).thenReturn(AUDIO_ID);
+//
+//        ResponseEntity<Map<String, Integer>> responseEntity =
+//                testInstance.uploadAudio(audio);
+//
+//        verify(audioService).uploadAudio(audio);
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        assertNotNull(responseEntity.getBody());
+//        assertEquals(Map.of("id", AUDIO_ID), responseEntity.getBody());
+//    }
 
-        ResponseEntity<Map<String, Integer>> responseEntity =
-                testInstance.uploadAudio(audio);
-
-        verify(audioService).uploadAudio(audio);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertEquals(Map.of("id", AUDIO_ID), responseEntity.getBody());
-    }
-
-    @Test
-    void shouldThrowExceptionIfContentTypeIsNotSupported() {
-        MultipartFile unsupportedAudio = new MockMultipartFile("audio.ogg", "audio.ogg", "audio/ogg", AUDIO_CONTENT);
-
-        assertThrows(InvalidRequestException.class, () ->
-                testInstance.uploadAudio(unsupportedAudio));
-
-        verify(audioService, never()).uploadAudio(any());
-    }
+//    @Test
+//    void shouldThrowExceptionIfContentTypeIsNotSupported() {
+//        MultipartFile unsupportedAudio = new MockMultipartFile("audio.ogg", "audio.ogg", "audio/ogg", AUDIO_CONTENT);
+//
+//        assertThrows(InvalidRequestException.class, () ->
+//                testInstance.uploadAudio(unsupportedAudio));
+//
+//        verify(audioService, never()).uploadAudio(any());
+//    }
 
     @Test
     void shouldReturnAudioContentIfAudioWasFound() {

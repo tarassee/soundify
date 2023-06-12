@@ -8,27 +8,18 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class Audio {
+public class StorageInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column
-    private String s3Key;
-
-    @Column
-    private String name;
-
-    @Column
-    private String format;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private StorageType storageType;
+    @Column(unique = true)
+    private String storageType;
+    private String bucket;
+    private String path;
 
 }

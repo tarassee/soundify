@@ -13,6 +13,8 @@ public interface AudioProcessingController {
 
     ResponseEntity<Map<String, Integer>> uploadAudio(@RequestPart("audio") MultipartFile audio);
 
+    ResponseEntity<Void> updateAudioStorage(@PathVariable Integer id);
+
     ResponseEntity<byte[]> getAudio(@PathVariable Integer id,
                                     @RequestHeader(value = "Range", required = false) String rangeHeader);
 

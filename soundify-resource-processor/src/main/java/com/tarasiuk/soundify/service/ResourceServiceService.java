@@ -4,4 +4,6 @@ public interface ResourceServiceService {
 
     byte[] getAudio(Integer id);
 
+    void updateAudioStorage(Integer id);
+
 }

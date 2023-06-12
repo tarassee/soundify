@@ -2,6 +2,7 @@ package com.tarasiuk.soundify.controller;
 
 import com.tarasiuk.soundify.exception.AudioNotFoundException;
 import com.tarasiuk.soundify.exception.InvalidRequestException;
+import com.tarasiuk.soundify.service.AudioBusinessService;
 import com.tarasiuk.soundify.service.AudioService;
 import com.taraiuk.soundify.controller.AudioProcessingController;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class DefaultAudioProcessingController implements AudioProcessingControll
 
     private static final String MP3_FORMAT = "audio/mpeg";
     private final AudioService audioService;
+    private final AudioBusinessService audioBusinessService;
 
     @Override
     @PostMapping
@@ -35,7 +37,14 @@ public class DefaultAudioProcessingController implements AudioProcessingControll
             throw new InvalidRequestException("Given file format is not supported: " + audio.getContentType());
         }
 
-        return new ResponseEntity<>(Map.of("id", audioService.uploadAudio(audio)), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("id", audioBusinessService.saveToStaging(audio)), HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/move-to-permanent/{id}")
+    public ResponseEntity<Void> updateAudioStorage(Integer id) {
+        audioBusinessService.moveToPermanent(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
