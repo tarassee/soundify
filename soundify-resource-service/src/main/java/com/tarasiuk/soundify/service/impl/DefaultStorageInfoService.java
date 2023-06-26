@@ -6,6 +6,7 @@ import com.tarasiuk.soundify.exception.ClientCallException;
 import com.tarasiuk.soundify.model.StorageType;
 import com.tarasiuk.soundify.service.StorageInfoService;
 import feign.FeignException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class DefaultStorageInfoService implements StorageInfoService {
 
     private final StorageInfoServiceClient storageInfoServiceClient;
 
+    @CircuitBreaker(name = "storageInfoService", fallbackMethod = "getStorageInfoByStorageTypeFallback")
     @Override
     public StorageInfoData getStorageInfoByStorageType(StorageType storageType) {
         try {
@@ -26,6 +28,14 @@ public class DefaultStorageInfoService implements StorageInfoService {
                     storageType, e.getCause());
             throw new ClientCallException(e.getMessage());
         }
+    }
+
+    public StorageInfoData getStorageInfoByStorageTypeFallback(StorageType storageType, Throwable throwable) {
+        log.error("Fallback execution. Returning fallback data for storage type '{}'. Reason: {}", storageType, throwable.getMessage());
+        if (StorageType.PERMANENT.equals(storageType)) {
+            return new StorageInfoData(storageType.name(), "soundify-permanent-storage-bucket", "/");
+        }
+        return new StorageInfoData(storageType.name(), "soundify-staged-storage-bucket", "/");
     }
 
 }

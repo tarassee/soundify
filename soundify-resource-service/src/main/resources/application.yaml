@@ -47,6 +47,35 @@ application:
   storage-info-service:
     name: SOUNDIFY-STORAGE-INFO-SERVICE
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      storageInfoService:
+        register-health-indicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+        permittedNumberOfCallsInHalfOpenState: 2
+        waitDurationInOpenState: 10s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  timelimiter:
+    instances:
+      storageInfoService:
+        timeoutDuration: 2s
+
 eureka:
   client:
     register-with-eureka: true
