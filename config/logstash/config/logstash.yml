@@ -1,0 +1,10 @@
+http:
+  host: "0.0.0.0"
+path:
+  config: /usr/share/logstash/pipeline
+xpack:
+  monitoring:
+    enabled: true
+    elasticsearch:
+      hosts:
+        - "soundify-elasticsearch:9200"

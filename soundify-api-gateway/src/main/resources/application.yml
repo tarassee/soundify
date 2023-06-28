@@ -11,6 +11,10 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: soundify-kibana-id
+          uri: http://soundify-kibana:5601
+          predicates:
+            - Path=/kibana/**
         - id: soundify-resource-service-id
           uri: lb://soundify-resource-service
           predicates:

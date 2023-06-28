@@ -12,6 +12,7 @@ services:
       - soundify-song-service
     environment:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_API_GATEWAY
+      - LOGSTASH_DESTINATION=soundify-logstash:5000
     ports:
       - "8765:8765"
     volumes:
@@ -24,6 +25,7 @@ services:
     build: ./soundify-eureka-server
     environment:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_EUREKA_SERVER
+      - LOGSTASH_DESTINATION=soundify-logstash:5000
     ports:
       - "8761:8761"
     volumes:
@@ -38,8 +40,10 @@ services:
       - mysql
       - rabbitmq
       - soundify-eureka-server
+      - logstash
     environment:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_RESOURCE_SERVICE
+      - LOGSTASH_DESTINATION=soundify-logstash:5000
     ports:
       - "8080:8080"
     volumes:
@@ -55,6 +59,7 @@ services:
       - soundify-eureka-server
     environment:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_STORAGE_INFO_SERVICE
+      - LOGSTASH_DESTINATION=soundify-logstash:5000
     ports:
       - "8095:8095"
     volumes:
@@ -70,6 +75,7 @@ services:
       - soundify-eureka-server
     environment:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_RESOURCE_PROCESSOR
+      - LOGSTASH_DESTINATION=soundify-logstash:5000
     ports:
       - "8090:8090"
     volumes:
@@ -85,6 +91,7 @@ services:
       - soundify-eureka-server
     environment:
       - SPRING_APPLICATION_JSON = $SPRING_APPLICATION_SONG_SERVICE
+      - LOGSTASH_DESTINATION=soundify-logstash:5000
     ports:
       - "8085:8085"
     volumes:
@@ -137,9 +144,58 @@ services:
     networks:
       - soundify-network
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
+    container_name: soundify-elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - soundify-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.8.1
+    container_name: soundify-logstash
+    volumes:
+      - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"
+      - "5001:5000/tcp"
+      - "5001:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - soundify-network
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.1
+    container_name: soundify-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      SERVER_BASEPATH: "/kibana"
+      SERVER_REWRITEBASEPATH: "true"
+    depends_on:
+      - elasticsearch
+    networks:
+      - soundify-network
+
 networks:
   soundify-network:
 
 volumes:
   maven_repo:
   localstack-data:
+  elasticsearch-data:
