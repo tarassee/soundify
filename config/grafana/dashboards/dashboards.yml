@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 1
+    options:
+      path: /etc/grafana/provisioning/dashboards/import-configs
+    editUrl: /import/dashboard/?file=/etc/grafana/provisioning/dashboards/import-configs/springboot-apm-dashboard_rev3.json

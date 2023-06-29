@@ -1,0 +1,43 @@
+global:
+  scrape_interval: 1s
+  evaluation_interval: 1s
+  external_labels:
+    monitor: "soundify-monitor"
+
+scrape_configs:
+
+  - job_name: 'soundify-api-gateway'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: [ 'soundify-api-gateway:8765' ]
+
+  - job_name: 'soundify-eureka-server'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: [ 'soundify-eureka-server:8761' ]
+
+  - job_name: 'soundify-resource-service'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: [ 'soundify-resource-service:8080' ]
+
+  - job_name: 'soundify-storage-info-service'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: [ 'soundify-storage-info-service:8095' ]
+
+  - job_name: 'soundify-resource-processor'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: [ 'soundify-resource-processor:8090' ]
+
+  - job_name: 'soundify-song-service'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: [ 'soundify-song-service:8085' ]

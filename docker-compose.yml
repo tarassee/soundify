@@ -192,6 +192,30 @@ services:
     networks:
       - soundify-network
 
+  prometheus:
+    image: prom/prometheus:v2.33.2
+    container_name: soundify-prometheus
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - soundify-network
+
+  grafana:
+    image: grafana/grafana:8.3.4
+    container_name: soundify-grafana
+    environment:
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+    volumes:
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3000:3000"
+    networks:
+      - soundify-network
+
 networks:
   soundify-network:
 
