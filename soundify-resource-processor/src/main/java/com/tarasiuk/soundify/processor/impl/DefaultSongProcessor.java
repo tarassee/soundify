@@ -7,9 +7,11 @@ import com.tarasiuk.soundify.service.SongDataService;
 import com.tarasiuk.soundify.service.SongServiceService;
 import com.tarasiuk.soundify.util.MetadataExtractorUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.metadata.Metadata;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class DefaultSongProcessor implements SongProcessor {
@@ -23,6 +25,7 @@ public class DefaultSongProcessor implements SongProcessor {
         byte[] audio = resourceServiceService.getAudio(id);
 
         Metadata metadata = extractMetadata(audio);
+        log.debug("Extracted metadata from audio with resource id {}: {}", id, metadata);
 
         SongData songData = songDataService.retrieveFrom(id, metadata);
 

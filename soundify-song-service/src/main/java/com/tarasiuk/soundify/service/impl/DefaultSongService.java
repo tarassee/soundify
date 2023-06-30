@@ -5,10 +5,12 @@ import com.tarasiuk.soundify.model.Song;
 import com.tarasiuk.soundify.repository.SongRepository;
 import com.tarasiuk.soundify.service.SongService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DefaultSongService implements SongService {
@@ -20,7 +22,9 @@ public class DefaultSongService implements SongService {
         if (songRepository.existsByResourceId(song.getResourceId())) {
             throw new InvalidRequestException("Song with such a resource id is already present!");
         }
-        return songRepository.save(song).getId();
+        Integer id = songRepository.save(song).getId();
+        log.info("SongData with resource id {} was saved to database", id);
+        return id;
     }
 
     @Override

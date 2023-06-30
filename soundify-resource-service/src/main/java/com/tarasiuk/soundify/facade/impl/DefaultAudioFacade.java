@@ -9,9 +9,11 @@ import com.tarasiuk.soundify.producer.ResourceMessageProducer;
 import com.tarasiuk.soundify.service.AudioService;
 import com.tarasiuk.soundify.service.S3StorageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DefaultAudioFacade implements AudioFacade {
@@ -24,11 +26,14 @@ public class DefaultAudioFacade implements AudioFacade {
     public Integer saveToStaging(MultipartFile audioFile) {
         StorageType stagingType = StorageType.STAGING;
         String audioFileName = s3StorageService.uploadFile(audioFile, stagingType);
+        log.info("Audio {} was uploaded to s3 bucket", audioFileName);
 
         Audio internalAudio = buildAudio(audioFile, audioFileName, stagingType);
         Integer id = audioService.saveAudio(internalAudio).getId();
+        log.info("Audio information was saved to database - id {}", id);
 
         resourceMessageProducer.send(new ResourceMessageData(id));
+        log.info("The message with resource id {} was sent to message queue", id);
         return id;
     }
 
@@ -48,7 +53,9 @@ public class DefaultAudioFacade implements AudioFacade {
                     StorageType permanentType = StorageType.PERMANENT;
                     s3StorageService.moveFile(audio.getS3Key(), audio.getStorageType(), permanentType);
                     audio.setStorageType(permanentType);
-                    return audioService.saveAudio(audio);
+                    Audio savedAudio = audioService.saveAudio(audio);
+                    log.info("Audio with id {} was moved to permanent storage", id);
+                    return savedAudio;
                 })
                 .orElseThrow(() -> new AudioNotFoundException(id));
     }
