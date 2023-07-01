@@ -13,6 +13,8 @@ spring:
 application:
   rabbitmq:
     queue: soundify_queue
+    exchange: soundify_exchange
+    routing-key: soundify_routingKey
   song-service:
     name: SOUNDIFY-SONG-SERVICE
   resource-service:

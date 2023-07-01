@@ -42,7 +42,6 @@ application:
   storage:
     type: LOCALSTACK
   rabbitmq:
-    queue: soundify_queue
     exchange: soundify_exchange
     routing-key: soundify_routingKey
   storage-info-service:
