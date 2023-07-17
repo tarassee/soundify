@@ -1,0 +1,12 @@
+server:
+  port: 9000
+#
+#spring:
+#  application:
+#    name: soundify-auth-server
+#
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: TRACE

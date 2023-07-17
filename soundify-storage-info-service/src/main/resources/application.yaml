@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8095
 
 spring:
   application:
@@ -16,6 +16,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000
 
 eureka:
   client:
